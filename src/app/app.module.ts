@@ -31,8 +31,9 @@ import { PostListComponent } from './posts/post-list/post-list.component';
     MatButtonModule,
     MatToolbarModule,
     MatExpansionModule,
+    HttpClientModule,
   ],
-  providers: [HttpClientModule],
+  providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
