@@ -2,6 +2,17 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 
+const mongoose = require("mongoose");
+
+const Post = require("./models/post");
+
+mongoose
+  .connect(
+    `mongodb+srv://bartekbjj:lTvhDH2Q8meAHgRc@cluster0.yz12z.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
+  )
+  .then(() => console.log("conntcted to database !!"))
+  .catch(() => console.log("connection failed"));
+
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
@@ -19,22 +30,23 @@ app.use((req, res, next) => {
 });
 
 app.post("/api/posts", (req, res, next) => {
-  const post = req.body;
+  const post = new Post({
+    title: req.body.title,
+    content: req.body.content,
+  });
+
+  post.save();
 
   console.log(post);
   res.status(201).json({ msg: "post added successfully" });
 });
 
 app.get("/api/posts", (req, res, next) => {
-  const posts = [
-    { id: "fadf1231l", title: "xdddd", content: "from servaafdf343a" },
-    { id: "fa321231l", title: "xdddsdsddd", content: "from sedddrvaaa" },
-    { id: "fadf1231l", title: "xdddd", content: "from servddfdfaaa" },
-  ];
-
-  res.status(200).json({
-    message: "posts fetched successfully",
-    posts: posts,
+  Post.find().then((docs) => {
+    res.status(200).json({
+      message: "posts fetched successfully",
+      posts: docs,
+    });
   });
 });
 
