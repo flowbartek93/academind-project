@@ -1,6 +1,7 @@
 import { Component, ElementRef, ViewChild, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Post } from '../models/post.model';
 import { PostService } from '../post-list/post-service';
 
@@ -10,7 +11,12 @@ import { PostService } from '../post-list/post-service';
   styleUrls: ['./post-create.components.scss'],
 })
 export class PostCreateComponent {
-  constructor(private postService: PostService) {}
+  constructor(private postService: PostService, public route: ActivatedRoute) {}
+
+  enteredTitle = '';
+  enteredContent = '';
+  private mode = 'create';
+  private postId: string;
 
   //HOOKS
 
@@ -23,7 +29,17 @@ export class PostCreateComponent {
     form.resetForm();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.route.paramMap.subscribe((paramMap: ParamMap) => {
+      if (paramMap.has('postId')) {
+        this.mode = 'edit';
+
+        this.postId = paramMap.get('postId');
+      } else {
+        this.mode = 'create';
+      }
+    });
+  }
 
   ngAfterViewInit() {}
 
