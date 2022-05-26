@@ -32,6 +32,10 @@ export class PostService {
       });
   }
 
+  getPost(id: string){
+    return {...this.posts.find(p => p.id === id)}
+  }
+
   getPostUpadateListener() {
     return this.postsUpdated.asObservable();
   }

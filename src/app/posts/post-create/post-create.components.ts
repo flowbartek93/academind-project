@@ -17,6 +17,7 @@ export class PostCreateComponent {
   enteredContent = '';
   private mode = 'create';
   private postId: string;
+  private post: Post;
 
   //HOOKS
 
@@ -35,6 +36,8 @@ export class PostCreateComponent {
         this.mode = 'edit';
 
         this.postId = paramMap.get('postId');
+
+        this.post = this.postService.getPost(this.postId);
       } else {
         this.mode = 'create';
       }
