@@ -17,16 +17,25 @@ export class PostCreateComponent {
   enteredContent = '';
   private mode = 'create';
   private postId: string;
-  private post: Post;
+  public post: Post;
 
   //HOOKS
 
-  onAddPost(form: NgForm) {
+  onSavePost(form: NgForm) {
     if (form.invalid) {
       return;
     }
 
-    this.postService.addPost(form.value.title, form.value.content);
+    if (this.mode === 'create') {
+      this.postService.addPost(form.value.title, form.value.content);
+    } else {
+      this.postService.updatePost(
+        this.postId,
+        form.value.title,
+        form.value.content
+      );
+    }
+
     form.resetForm();
   }
 
@@ -37,9 +46,17 @@ export class PostCreateComponent {
 
         this.postId = paramMap.get('postId');
 
-        this.post = this.postService.getPost(this.postId);
+        console.log(this.postId);
+        this.postService.getPost(this.postId).subscribe((postData) => {
+          this.post = {
+            id: postData._id,
+            title: postData.title,
+            content: postData.content,
+          };
+        });
       } else {
         this.mode = 'create';
+        this.postId = null;
       }
     });
   }
