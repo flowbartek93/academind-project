@@ -43,17 +43,25 @@ export class PostService {
     return this.postsUpdated.asObservable();
   }
 
-  addPost(title: string, content: string) {
-    const post = { id: null, title: title, content: content };
+  addPost(title: string, content: string, image: File) {
+    // const post = { id: null, title: title, content: content };
+
+    const postData = new FormData();
+
+    postData.append('title', title);
+    postData.append('content', content);
+
+    postData.append('image', image, title);
 
     this.httpClient
       .post<{ msg: string; postId: string }>(
         'http://localhost:3000/api/posts',
-        post
+        postData
       )
       .pipe(
         tap((res) => console.log('request', res.msg)),
         map((res) => {
+          const post: Post = { id: res.postId, title: title, content: content };
           return {
             ...post,
             id: res.postId,
