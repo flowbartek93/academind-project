@@ -40,7 +40,7 @@ export class PostService {
   }
 
   getPostUpadateListener() {
-    return this.postsUpdated.asObservable();
+    return this.postsUpdated.asObservable(); //wyprowadza tablice postUpdated na zewnątrz app
   }
 
   addPost(title: string, content: string, image: File) {

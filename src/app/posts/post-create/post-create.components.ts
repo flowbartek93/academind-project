@@ -1,5 +1,5 @@
-import { Component, ElementRef, ViewChild, Output } from '@angular/core';
-import { EventEmitter } from '@angular/core';
+import { Component } from '@angular/core';
+
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Post } from '../models/post.model';
@@ -28,6 +28,9 @@ export class PostCreateComponent {
   //HOOKS
 
   onSavePost() {
+    //SUBMIT POSTA
+
+    console.log('save');
     if (this.form.invalid) {
       return;
     }
@@ -60,31 +63,34 @@ export class PostCreateComponent {
         validators: [Validators.required, Validators.minLength(3)],
       }),
       image: new FormControl(null, {
-        validators: [Validators.required],
+        // validators: [Validators.required],
         asyncValidators: [mimeType],
       }),
     });
 
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
+      console.log(paramMap);
       if (paramMap.has('postId')) {
         this.mode = 'edit';
 
         this.postId = paramMap.get('postId');
 
         console.log(this.postId);
+
         this.postService.getPost(this.postId).subscribe((postData) => {
           this.post = {
             id: postData._id,
             title: postData.title,
             content: postData.content,
           };
-        });
 
-        this.form.setValue({
-          title: this.post.title,
-          content: this.post.content,
+          this.form.patchValue({
+            title: this.post.title,
+            content: this.post.content,
+          });
         });
       } else {
+        console.log('create');
         this.mode = 'create';
         this.postId = null;
       }
@@ -96,15 +102,20 @@ export class PostCreateComponent {
 
     this.form.patchValue({ image: file });
 
-    this.form.get('image').updateValueAndValidity();
+    //update kontrolki
+
+    // this.form.get('image').updateValueAndValidity();
 
     const reader = new FileReader();
 
-    reader.onload = () => {
-      this.imagePreview = reader.result as string;
-    };
+    //nasłuchanie na file reader w momencie zaladowanai pliku z przeglądarki
 
-    console.log(reader);
+    reader.onload = () => {
+      console.log(reader);
+      console.log(reader.result);
+      this.imagePreview = reader.result as string;
+      console.log(this.imagePreview);
+    };
 
     reader.readAsDataURL(file);
   }

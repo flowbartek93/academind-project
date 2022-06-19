@@ -5,6 +5,7 @@
       <input placeholder="title" matInput formControlName="title" type="text" />
     </mat-form-field>
 
+    <!-- File picker -->
     <div>
       <button
         mat-stroked-button
@@ -16,6 +17,8 @@
       </button>
       <input type="file" #filePicker (change)="onImagePicked($event)" />
     </div>
+
+    <!-- File Picker -->
 
     <div
       class="image-preview"

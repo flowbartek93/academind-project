@@ -31,21 +31,24 @@ const storage = multer.diskStorage({
 router.post(
   "",
   multer({ storage: storage }).single("image"),
+
   (req, res, next) => {
     const post = new Post({
       title: req.body.title,
       content: req.body.content,
     });
+
     post.save().then((createdPost) => {
       res.status(201).json({
         message: "Post added successfully",
-        postId: createdPost._id,
+        postId: createdPost._id, // id sie tworzy automatycznie
       });
     });
   }
 );
 
 router.put("/:id", (req, res, next) => {
+  //edycja
   const post = new Post({
     _id: req.body.id,
     title: req.body.title,
@@ -57,7 +60,10 @@ router.put("/:id", (req, res, next) => {
 });
 
 router.get("", (req, res, next) => {
+  //pobranie postów
   Post.find().then((documents) => {
+    console.log(documents);
+
     res.status(200).json({
       message: "Posts fetched successfully!",
       posts: documents,
@@ -66,6 +72,7 @@ router.get("", (req, res, next) => {
 });
 
 router.get("/:id", (req, res, next) => {
+  // pobranie konretnego posta
   Post.findById(req.params.id).then((post) => {
     if (post) {
       res.status(200).json(post);
@@ -76,6 +83,7 @@ router.get("/:id", (req, res, next) => {
 });
 
 router.delete("/:id", (req, res, next) => {
+  //usunięcie
   Post.deleteOne({ _id: req.params.id }).then((result) => {
     console.log(result);
     res.status(200).json({ message: "Post deleted!" });

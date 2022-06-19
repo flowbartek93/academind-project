@@ -2,11 +2,11 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
-const postsRoutes = require("./routes/posts");
+const postsRoutes = require("./routes/posts"); // routes
 
-const app = express();
+const app = express(); //instancja expressa
 
-mongoose
+mongoose // pol z baza danych
   .connect(
     `mongodb+srv://bartekbjj:lTvhDH2Q8meAHgRc@cluster0.yz12z.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
   )
@@ -17,7 +17,7 @@ mongoose
     console.log("Connection failed!");
   });
 
-app.use(bodyParser.json());
+app.use(bodyParser.json()); //middle ware parsowanie body
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use((req, res, next) => {
