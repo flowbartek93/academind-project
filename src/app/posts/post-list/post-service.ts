@@ -22,6 +22,7 @@ export class PostService {
               title: post.title,
               content: post.content,
               id: post._id,
+              imagePath: post.imagePath,
             };
           });
         })
@@ -34,9 +35,12 @@ export class PostService {
   }
 
   getPost(id: string) {
-    return this.httpClient.get<{ _id: string; title: string; content: string }>(
-      'http://localhost:3000/api/posts/' + id
-    );
+    return this.httpClient.get<{
+      _id: string;
+      title: string;
+      content: string;
+      imagePath: string;
+    }>('http://localhost:3000/api/posts/' + id);
   }
 
   getPostUpadateListener() {
@@ -54,17 +58,21 @@ export class PostService {
     postData.append('image', image, title);
 
     this.httpClient
-      .post<{ msg: string; postId: string }>(
+      .post<{ msg: string; post: Post }>(
         'http://localhost:3000/api/posts',
         postData
       )
       .pipe(
         tap((res) => console.log('request', res.msg)),
         map((res) => {
-          const post: Post = { id: res.postId, title: title, content: content };
+          const post: Post = {
+            id: res.post.id,
+            title: title,
+            content: content,
+            imagePath: res.post.imagePath,
+          };
           return {
             ...post,
-            id: res.postId,
           };
         })
       )
@@ -77,8 +85,13 @@ export class PostService {
       });
   }
 
-  updatePost(id: string, title: string, content: string) {
-    const post: Post = { id: id, title: title, content: content };
+  updatePost(id: string, title: string, content: string, imagePath: string) {
+    const post: Post = {
+      id: id,
+      title: title,
+      content: content,
+      imagePath: imagePath,
+    };
 
     this.httpClient
       .put('http://localhost:3000/api/posts/' + id, post)

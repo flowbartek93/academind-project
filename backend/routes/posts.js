@@ -1,4 +1,5 @@
 const express = require("express");
+const { closeSync } = require("fs");
 const multer = require("multer");
 
 const Post = require("../models/post");
@@ -33,15 +34,27 @@ router.post(
   multer({ storage: storage }).single("image"),
 
   (req, res, next) => {
+    const url = `${req.protocol}://${req.get("host")}`;
+    // console.log(res);
+
+    console.log(req.protocol);
+    console.log(req.file);
+
     const post = new Post({
       title: req.body.title,
       content: req.body.content,
+      imagePath: `${url}/images/${req.file.filename}`,
+
+      //tu pewnie dalej z req.file tworzymy Schema
     });
 
     post.save().then((createdPost) => {
       res.status(201).json({
         message: "Post added successfully",
-        postId: createdPost._id, // id sie tworzy automatycznie
+        post: {
+          ...createdPost,
+          imagePath: createdPost.imagePath,
+        },
       });
     });
   }
@@ -62,8 +75,6 @@ router.put("/:id", (req, res, next) => {
 router.get("", (req, res, next) => {
   //pobranie postów
   Post.find().then((documents) => {
-    console.log(documents);
-
     res.status(200).json({
       message: "Posts fetched successfully!",
       posts: documents,
@@ -85,7 +96,6 @@ router.get("/:id", (req, res, next) => {
 router.delete("/:id", (req, res, next) => {
   //usunięcie
   Post.deleteOne({ _id: req.params.id }).then((result) => {
-    console.log(result);
     res.status(200).json({ message: "Post deleted!" });
   });
 });

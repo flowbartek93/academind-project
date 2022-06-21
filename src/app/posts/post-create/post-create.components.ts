@@ -47,7 +47,8 @@ export class PostCreateComponent {
       this.postService.updatePost(
         this.postId,
         this.form.value.title,
-        this.form.value.content
+        this.form.value.content,
+        this.form.value.image
       );
     }
 
@@ -82,6 +83,7 @@ export class PostCreateComponent {
             id: postData._id,
             title: postData.title,
             content: postData.content,
+            imagePath: null,
           };
 
           this.form.patchValue({
