@@ -2,7 +2,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const path = require("path");
+
 const postsRoutes = require("./routes/posts"); // routes
+const userRoutes = require("./routes/user");
 
 const app = express(); //instancja expressa
 
@@ -36,5 +38,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/posts", postsRoutes);
+
+app.use("/api/user", userRoutes);
 
 module.exports = app;
