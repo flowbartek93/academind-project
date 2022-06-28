@@ -65,6 +65,8 @@ export class PostListComponent implements OnInit {
     });
   }
 
+  logout() {}
+
   ngOnDestroy() {
     this.postsSub.unsubscribe();
     // this.authStatusSub.unsubscribe();
