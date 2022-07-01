@@ -84,6 +84,7 @@ export class PostCreateComponent {
             title: postData.title,
             content: postData.content,
             imagePath: postData.imagePath,
+            creator: postData.creator,
           };
 
           this.form.patchValue({
