@@ -47,15 +47,21 @@ router.post(
       //tu pewnie dalej z req.file tworzymy Schema
     });
 
-    post.save().then((createdPost) => {
-      res.status(201).json({
-        message: "Post added successfully",
-        post: {
-          ...createdPost,
-          imagePath: createdPost.imagePath,
-        },
+    post
+      .save()
+      .then((createdPost) => {
+        res.status(201).json({
+          message: "Post added successfully",
+          post: {
+            ...createdPost,
+            imagePath: createdPost.imagePath,
+          },
+        });
+      })
+      .catch((error) => res.status(500))
+      .json({
+        message: "Creating a post failed",
       });
-    });
   }
 );
 
@@ -82,16 +88,19 @@ router.put(
       creator: req.userData.userId,
     });
 
-    Post.updateOne(
-      { _id: req.params.id, creator: req.userData.userId },
-      post
-    ).then((result) => {
-      if (result.modifiedCount > 0) {
-        res.status(200).json({ message: "Update successful!" });
-      } else {
-        res.status(401).json({ message: "Not authorizded" });
-      }
-    });
+    Post.updateOne({ _id: req.params.id, creator: req.userData.userId }, post)
+      .then((result) => {
+        if (result.modifiedCount > 0) {
+          res.status(200).json({ message: "Update successful!" });
+        } else {
+          res.status(401).json({ message: "Not authorizded" });
+        }
+      })
+      .catch((error) => {
+        res.status(500).json({
+          message: "Could not update post",
+        });
+      });
   }
 );
 
@@ -110,13 +119,19 @@ router.get("", (req, res, next) => {
   postQuery.then((documents) => {
     console.log(documents);
     fetchedPosts = documents;
-    return Post.count().then((count) => {
-      res.status(200).json({
-        message: "Posts fetched successfully!",
-        posts: fetchedPosts,
-        maxPosts: count,
+    return Post.count()
+      .then((count) => {
+        res.status(200).json({
+          message: "Posts fetched successfully!",
+          posts: fetchedPosts,
+          maxPosts: count,
+        });
+      })
+      .catch((err) => {
+        res.status(500).json({
+          message: "fetching post failed",
+        });
       });
-    });
   });
 });
 
