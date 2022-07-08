@@ -16,14 +16,17 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.userIsAuthenticated = this.authService.getIsAuth();
 
-    // this.authListenrSubs = this.authService
-    //   .getAuthStatusListener()
-    //   .subscribe((val) => {
-    //     this.userIsAuthenticated = val;
-    //   });
+    this.authListenrSubs = this.authService
+      .getAuthStatusListener()
+      .subscribe((val) => {
+        this.userIsAuthenticated = val;
+      });
+
+    console.log(this.userIsAuthenticated);
   }
 
   onLogout() {
+    console.log('logout');
     this.authService.logout();
   }
 

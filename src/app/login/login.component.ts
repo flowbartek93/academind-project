@@ -30,6 +30,7 @@ export class LoginComponent {
     this.authStatusSub = this.authService
       .getAuthStatusListener()
       .subscribe((authStatus) => {
+        console.log(authStatus);
         this.isLoading = false;
       });
   }

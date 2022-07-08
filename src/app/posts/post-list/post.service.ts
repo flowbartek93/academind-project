@@ -3,7 +3,10 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 import { Post } from '../models/post.model';
+
+const BACKEND_URL = ` ${environment.apiUrl}/posts/`;
 
 @Injectable({ providedIn: 'root' })
 export class PostService {
@@ -18,7 +21,7 @@ export class PostService {
 
     this.httpClient
       .get<{ message: string; posts: any; maxPosts: number }>(
-        'http://localhost:3000/api/posts' + queryParams
+        BACKEND_URL + queryParams
       )
       .pipe(
         map((postData) => {
@@ -54,7 +57,7 @@ export class PostService {
       content: string;
       imagePath: string;
       creator: string;
-    }>('http://localhost:3000/api/posts/' + id);
+    }>(BACKEND_URL + id);
   }
 
   getPostUpadateListener() {
@@ -72,10 +75,7 @@ export class PostService {
     postData.append('image', image, title);
 
     this.httpClient
-      .post<{ msg: string; post: Post }>(
-        'http://localhost:3000/api/posts',
-        postData
-      )
+      .post<{ msg: string; post: Post }>(BACKEND_URL, postData)
       .pipe(tap((res) => console.log('request', res.msg)))
       .subscribe((postData) => {
         // this.posts.push(postData);
@@ -105,31 +105,29 @@ export class PostService {
       };
     }
 
-    this.httpClient
-      .put('http://localhost:3000/api/posts/' + id, postData)
-      .subscribe((response) => {
-        // const updatedPosts = [...this.posts];
-        // const oldPostIndex = updatedPosts.findIndex((p) => p.id === id);
+    this.httpClient.put(BACKEND_URL + id, postData).subscribe((response) => {
+      // const updatedPosts = [...this.posts];
+      // const oldPostIndex = updatedPosts.findIndex((p) => p.id === id);
 
-        // const post: Post = {
-        //   id: id,
-        //   title: title,
-        //   content: content,
-        //   imagePath: '',
-        // };
-        // updatedPosts[oldPostIndex] = post;
+      // const post: Post = {
+      //   id: id,
+      //   title: title,
+      //   content: content,
+      //   imagePath: '',
+      // };
+      // updatedPosts[oldPostIndex] = post;
 
-        // this.posts = updatedPosts;
+      // this.posts = updatedPosts;
 
-        // this.postsUpdated.next([...this.posts]);
+      // this.postsUpdated.next([...this.posts]);
 
-        this.router.navigate(['/']);
-      });
+      this.router.navigate(['/']);
+    });
   }
 
   deletePost(postId: string) {
     console.log(postId);
-    return this.httpClient.delete(`http://localhost:3000/api/posts/` + postId);
+    return this.httpClient.delete(BACKEND_URL + postId);
 
     // .subscribe(() => {
     //   const updatedPosts = this.posts.filter((post) => post.id !== postId);

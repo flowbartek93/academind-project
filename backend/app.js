@@ -10,7 +10,7 @@ const app = express(); //instancja expressa
 
 mongoose // pol z baza danych
   .connect(
-    `mongodb+srv://bartekbjj:lTvhDH2Q8meAHgRc@cluster0.yz12z.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
+    `mongodb+srv://bartekbjj:${process.env.MONGO_ATLAS_PW}@cluster0.yz12z.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
   )
   .then(() => {
     console.log("Connected to database!");
